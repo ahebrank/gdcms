@@ -3,14 +3,20 @@ from bs4 import BeautifulSoup, Comment
 def innerHTML(element):
   return element.decode_contents(formatter="html")
 
-def clean(markup):
-  """ 
+def prettify_body(markup):
+  """
+  dump the body
   """
   soup = BeautifulSoup(markup, 'html.parser')
-  body = innerHTML(soup.body)
+  return soup.body.prettify()
 
-  body = safe_html(body)
-  soup = BeautifulSoup(body, 'html.parser')
+def clean(markup):
+  """ 
+  apply whitelisting functions
+  """
+
+  html = safe_html(markup)
+  soup = BeautifulSoup(html, 'html.parser')
   return soup.prettify()
 
 # the below is from http://chase-seibert.github.io/blog/2011/01/28/sanitize-html-with-beautiful-soup.html
@@ -22,11 +28,13 @@ def safe_html(html):
   blacklist = ["script", "style" ]
 
   whitelist = [
-    "div", "span", "p", "br", "pre",
-    "table", "tbody", "thead", "tr", "td", "a",
-    "blockquote",
+    "p", "br", "pre",
+    "table", "tbody", "thead", "tr", "td", "th",
+    "a",
+    "blockquote", "cite",
     "ul", "li", "ol",
-    "b", "em", "i", "strong", "u", "font"
+    "b", "em", "i", "strong", "u",
+    "h1", "h2", "h3", "h4", "h5", "h6"
     ]
 
   try:
@@ -65,7 +73,7 @@ def safe_html(html):
   return safe_html
 
 def _attr_name_whitelisted(attr_name):
-    return attr_name.lower() in ["href", "style", "color", "size", "bgcolor", "border"]
+    return attr_name.lower() in ["href", "title"]
 
 def safe_css(attr, css):
   if attr == "style":

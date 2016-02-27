@@ -1,11 +1,13 @@
 import os
 import sys
+import errno
 import fnmatch
 import re
 import argparse
 import urllib2
-from lib.cleaner import clean
-import errno
+
+# local imports
+import lib.cleaner as cleaner
 
 def get_files(src, pat):
   """
@@ -76,6 +78,7 @@ def insert_content(tags, content, src, dest):
   """
   for gid in tags.keys():
     if not content[gid] is None:
+      insertion = "<!-- insert from %s -->\n%s\n<!-- end insert from %s -->" % (gid, content[gid], gid)
       for file in tags[gid]:
         markup = content[gid]
         pat = r'(\{\{ *gd\:' + gid + ' *\}\})'
@@ -85,7 +88,7 @@ def insert_content(tags, content, src, dest):
           html = fin.read()
         matches = [match.group(1).strip() for match in regex.finditer(html)]
         for m in matches:
-          html = html.replace(m, content[gid])
+          html = html.replace(m, insertion)
 
         dest_file = get_dest_file(file, src, dest)
         with open(dest_file, 'w') as fout:
@@ -106,7 +109,7 @@ if __name__ == "__main__":
   tags = collect_doc_ids(src)
 
   # get a tag -> HTML map
-  content = {gid: clean(get_markup(gid)) for gid in tags.keys()}
+  content = {gid: cleaner.clean(get_markup(gid)) for gid in tags.keys()}
 
   # insert the content
   insert_content(tags=tags, content=content, src=src, dest=dest)
