@@ -41,7 +41,7 @@ def safe_html(html):
     # BeautifulSoup is catching out-of-order and unclosed tags, so markup
     # can't leak out of comments and break the rest of the page.
     soup = BeautifulSoup(html, 'html.parser')
-  except HTMLParseError, e:
+  except HTMLParseError as e:
     # special handling?
     raise e
 
@@ -65,7 +65,11 @@ def safe_html(html):
   for comment in comments:
     comment.extract()
 
-  safe_html = unicode(soup)
+  # clean out the spans
+  for match in soup.findAll('span'):
+    match.unwrap()
+
+  safe_html = str(soup)
 
   if safe_html == ", -":
     return None
@@ -73,7 +77,7 @@ def safe_html(html):
   return safe_html
 
 def _attr_name_whitelisted(attr_name):
-    return attr_name.lower() in ["href", "title"]
+    return attr_name.lower() in ["href", "title", "id"]
 
 def safe_css(attr, css):
   if attr == "style":

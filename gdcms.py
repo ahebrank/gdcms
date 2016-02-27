@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import errno
 import fnmatch
 import re
 import argparse
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 # local imports
 import lib.cleaner as cleaner
@@ -52,7 +54,7 @@ def get_markup(gid):
   collect the raw markup for a google doc id
   """
   url = "https://docs.google.com/feeds/download/documents/export/Export?id=%s&format=html" % gid
-  response = urllib2.urlopen(url)
+  response = urllib.request.urlopen(url)
   resp_code = response.getcode()
 
   if (resp_code == 200):
@@ -76,7 +78,7 @@ def insert_content(tags, content, src, dest):
   """
   stick the markup in the files
   """
-  for gid in tags.keys():
+  for gid in list(tags.keys()):
     if not content[gid] is None:
       insertion = "<!-- insert from %s -->\n%s\n<!-- end insert from %s -->" % (gid, content[gid], gid)
       for file in tags[gid]:
@@ -109,7 +111,7 @@ if __name__ == "__main__":
   tags = collect_doc_ids(src)
 
   # get a tag -> HTML map
-  content = {gid: cleaner.clean(get_markup(gid)) for gid in tags.keys()}
+  content = {gid: cleaner.clean(get_markup(gid)) for gid in list(tags.keys())}
 
   # insert the content
   insert_content(tags=tags, content=content, src=src, dest=dest)
