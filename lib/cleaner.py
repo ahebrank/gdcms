@@ -14,7 +14,6 @@ def clean(markup):
   """ 
   apply whitelisting functions
   """
-
   html = safe_html(markup)
   soup = BeautifulSoup(html, 'html.parser')
   return soup.prettify()
@@ -25,7 +24,7 @@ def safe_html(html):
     return None
 
   # remove these tags, complete with contents.
-  blacklist = ["script", "style" ]
+  blacklist = ["script", "style"]
 
   whitelist = [
     "p", "br", "pre",
@@ -34,7 +33,8 @@ def safe_html(html):
     "blockquote", "cite",
     "ul", "li", "ol",
     "b", "em", "i", "strong", "u",
-    "h1", "h2", "h3", "h4", "h5", "h6"
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "img", "span"
     ]
 
   try:
@@ -52,7 +52,7 @@ def safe_html(html):
       tag.extract()
     elif tag.name.lower() in whitelist:
       # tag is allowed. Make sure all the attributes are allowed.
-      tag.attrs = [(a[0], safe_css(a[0], a[1])) for a in tag.attrs if _attr_name_whitelisted(a[0])]
+      tag.attrs = {k: safe_css(k, tag.attrs[k]) for k in tag.attrs if _attr_name_whitelisted(k)}
     else:
       # not a whitelisted tag. I'd like to remove it from the tree
       # and replace it with its children. But that's hard. It's much
@@ -77,7 +77,7 @@ def safe_html(html):
   return safe_html
 
 def _attr_name_whitelisted(attr_name):
-    return attr_name.lower() in ["href", "title", "id"]
+    return attr_name.lower() in ["href", "title", "alt", "src"]
 
 def safe_css(attr, css):
   if attr == "style":
