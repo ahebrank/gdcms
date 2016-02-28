@@ -4,7 +4,7 @@ This is an experiment to allow embedding cleaned HTML from Google Docs in templa
 
 ## Usage
 
-Source files must contain one or more tags to reference a (publically accessible) Google Doc:
+Source files must contain one or more tags to reference a (publicly accessible) Google Doc:
 
 ```
 {{ gd:1lXknhHMaDcY3f1KivG31P-rN7IH7Q_HhuPFBtCkZrB0 }}
