@@ -25,7 +25,6 @@ def get_tags(file):
   """
   return a list of GD IDs in file
   """
-  ids = []
   pat = r'\{\{ *gd\:(.*) *\}\}'
   regex = re.compile(pat)
   html = ''
@@ -111,7 +110,7 @@ if __name__ == "__main__":
   tags = collect_doc_ids(src)
 
   # get a tag -> HTML map
-  content = {gid: cleaner.clean(get_markup(gid)) for gid in list(tags.keys())}
+  content = {gid: cleaner.clean(get_markup(gid)) for gid in tags.keys()}
 
   # insert the content
   insert_content(tags=tags, content=content, src=src, dest=dest)

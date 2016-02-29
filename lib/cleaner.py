@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup, Comment
+import urllib.parse
 
 def innerHTML(element):
   return element.decode_contents(formatter="html")
@@ -17,6 +18,19 @@ def clean(markup):
   html = safe_html(markup)
   soup = BeautifulSoup(html, 'html.parser')
   return soup.prettify()
+
+def ungoogle_link(url):
+  """
+  take a URL like https://www.google.com/url?q=[URL]
+  and return the [URL] part
+  """
+  if "www.google.com/url" in url:
+    parsed = urllib.parse.urlparse(url)
+    qs = urllib.parse.parse_qs(parsed.query)
+    if 'q' in qs:
+      return urllib.parse.unquote(qs['q'][0])
+  return url
+
 
 # the below is from http://chase-seibert.github.io/blog/2011/01/28/sanitize-html-with-beautiful-soup.html
 def safe_html(html):
@@ -66,8 +80,13 @@ def safe_html(html):
     comment.extract()
 
   # clean out the spans
-  for match in soup.findAll('span'):
-    match.unwrap()
+  for tag in soup.findAll('span'):
+    tag.unwrap()
+
+  # un-google the links
+  for tag in soup.findAll('a'):
+    if 'href' in tag.attrs:
+      tag.attrs['href'] = ungoogle_link(tag.attrs['href'])
 
   safe_html = str(soup)
 
