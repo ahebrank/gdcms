@@ -1,3 +1,7 @@
+"""
+Google Docs html cleaning
+"""
+
 from bs4 import BeautifulSoup, Comment
 import urllib.parse
 
