@@ -6,6 +6,9 @@ import json
 import lib.doc as doc
 import re
 
+def collect_doc_ids(files):
+  return doc.collect_doc_ids(files, 'gs')
+
 def get_sheet_data(gid):
   """
   grab a json from the sheet

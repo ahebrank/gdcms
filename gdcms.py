@@ -8,7 +8,6 @@ import argparse
 import lib.files as files
 import lib.doc as doc
 import lib.pages as pages
-import lib.cleaner as cleaner
 import lib.sheets as sheets
 
 if __name__ == "__main__":
@@ -28,11 +27,11 @@ if __name__ == "__main__":
   files = files.copy_files(src, dest)
 
   # collect id -> [file] maps for the tag variations
-  doc_tags = doc.collect_doc_ids(files, 'gd')
-  sheet_tags = doc.collect_doc_ids(files, 'gs')
+  doc_tags = pages.collect_doc_ids(files)
+  sheet_tags = sheets.collect_doc_ids(files)
 
   # get a tag -> content map for each tag variation
-  doc_content = {gid: cleaner.clean(pages.get_markup(gid)) for gid in doc_tags.keys()}
+  doc_content = {gid: pages.get_clean_markup(gid) for gid in doc_tags.keys()}
   sheet_data = {gid: sheets.get_sheet_data(gid) for gid in sheet_tags.keys()}
 
   # insert the content for each document type

@@ -2,8 +2,12 @@
 handle Google Docs (as in, for word processing)
 """
 
-import lib.doc as doc
 import re
+import lib.doc as doc
+import lib.cleaner as cleaner
+
+def collect_doc_ids(files):
+  return doc.collect_doc_ids(files, 'gd')
 
 def get_markup(gid):
   """
@@ -11,6 +15,13 @@ def get_markup(gid):
   """
   url = "https://docs.google.com/feeds/download/documents/export/Export?id=%s&format=html" % gid
   return doc.url_fetch(url)
+
+def get_clean_markup(gid):
+  """
+  cleaned markup
+  """
+  markup = get_markup(gid)
+  return cleaner.clean(markup)
 
 def insert_doc_content(tags, content, debug = False):
   """
