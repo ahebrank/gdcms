@@ -47,4 +47,10 @@ To process a set of files containing these tags, feed the parent directory to th
 ./gdcms.py -s sample/src -d sample/dist
 ```
 
-That's it.  The script will collect tags, pull in markup and strutured data, and create a new set of output files with the complete HTML.
+That's it.  The script will collect tags, pull in markup and structured data, and create a new set of output files with the complete HTML.
+
+For more command line options,
+
+```bash
+./gdcms.py -h
+```

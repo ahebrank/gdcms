@@ -16,15 +16,17 @@ if __name__ == "__main__":
   parser.add_argument('-s', '--source', action='store', help='source directory to spider', required=True)
   parser.add_argument('-d', '--dest', action='store', help='output directory', required=False, default='./output')
   parser.add_argument('-v', '--verbose', action='store_true', help='debug output', default=False)
+  parser.add_argument('-f', '--pattern', action='store', help='pattern matching files to parse', default='*.html')
   args = parser.parse_args()
 
   src = os.path.abspath(args.source)
   dest = os.path.abspath(args.dest)
+  pat = args.pattern
 
   debug = args.verbose
 
   # copy over the files
-  files = files.copy_files(src, dest)
+  files = files.copy_files(src, dest, pat)
 
   # collect id -> [file] maps for the tag variations
   doc_tags = pages.collect_doc_ids(files)

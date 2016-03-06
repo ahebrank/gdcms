@@ -46,7 +46,8 @@ def get_files(src, pat):
 
 def copy_files(src, dest, pat="*.html"):
   """
-  copy over files from src to dest
+  copy over ALL files from src to dest, return only those matching pat
   """
-  files = get_files(src, pat)
-  return [copy_file_to_dest(f, src, dest) for f in files]
+  files = get_files(src, "*")
+  copied = [copy_file_to_dest(f, src, dest) for f in files]
+  return fnmatch.filter(copied, pat)
