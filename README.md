@@ -24,10 +24,10 @@ Set up one or more sheets in which the first row contains field IDs and the firs
 
 For instance,
 
-| id  | heading | subheading |
-| ------------- | ------------- |
-| page-1  | Title for Page 1  | Subheading for page 1
-| page-2  | Title for Page 2  | Subheading for page 2
+| id      | heading           | subheading            |
+| ------- | ----------------- | ----------------------|
+| page-1  | Title for Page 1  | Subheading for page 1 |
+| page-2  | Title for Page 2  | Subheading for page 2 |
 
 Template tags then reference the Sheet, element ID, and field ID as a sort of pseudo-function.
 
